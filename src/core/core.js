@@ -47,6 +47,12 @@ import Debug from "../utilities/debug.js";
 import Visualizations from "../fx/visualizations.js";
 
 /**
+ * Import the Config State module.
+ * @module utilities/configState
+ */
+ import ConfigState from "../utilities/configState.js";
+
+/**
  * Interacts directly with native functions of the Audio element. Logic
  * leading up to these methods are handled by click handlers which call
  * helpers and visual synchronizers. These are the core functions of AmplitudeJS.
@@ -97,16 +103,16 @@ let Core = (function() {
     */
     let playPromise = config.audio.play();
 
-    if( playPromise !== undefined ){
-      playPromise.then( _ => {
-
-      })
-      .catch( error => {
-
-      });
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {}).catch(error => {});
     }
     config.audio.play();
     config.audio.playbackRate = config.playback_speed;
+    
+    /*
+      Sets the state of the player.
+    */
+    ConfigState.setPlayerState();
   }
 
   /**
@@ -128,7 +134,8 @@ let Core = (function() {
 			Flag that pause button was clicked.
 		*/
     config.paused = true;
-
+    
+    
     /*
 			If the song is live, we disconnect the stream so we aren't
 			saving it to memory.
@@ -136,6 +143,11 @@ let Core = (function() {
     if (config.active_metadata.live) {
       disconnectStream();
     }
+    
+    /*
+      Sets the state of the player.
+    */
+    ConfigState.setPlayerState();
   }
 
   /**
@@ -169,6 +181,11 @@ let Core = (function() {
       disconnectStream();
     }
 
+    /*
+      Sets the state of the player.
+    */
+    ConfigState.setPlayerState();
+  
     /*
 			Run the stop callback
 		*/
